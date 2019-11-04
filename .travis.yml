@@ -17,7 +17,7 @@ jobs:
       os: linux
       language: shell
       script:
-        - IMAGE_VERSION=${TRAVIS_TAG} build/build-arch.sh
+        - IMAGE_VERSION=${TRAVIS_BRANCH} build/build-arch.sh
         #TODO: call test script if available
     - name: build-arm64
       arch: arm64
@@ -29,7 +29,7 @@ jobs:
       os: linux
       language: shell
       script:
-        - IMAGE_VERSION=${TRAVIS_TAG} build/build-arch.sh
+        - IMAGE_VERSION=${TRAVIS_BRANCH} build/build-arch.sh
         #TODO: call test script if available
 
     - stage: auto-tag
@@ -51,11 +51,9 @@ jobs:
           - docker-image-amd64
           - docker-image-arm64
       script:
-        - ls -alR
-        - cd build
         - docker image load -i image-amd64.tar
-        - docker image load -i image-arm64.tar
         - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=amd64 build/push-arch.sh
+        - docker image load -i image-arm64.tar
         - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=arm64 build/push-arch.sh
 
     - stage: manifest
