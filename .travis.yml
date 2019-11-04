@@ -19,6 +19,7 @@ jobs:
         language: shell
         script:
           - IMAGE_VERSION=${TRAVIS_TAG} build/build-arch.sh
+          - mv build/image-*.tar .
           #TODO: call test script if available
     - <<: *build-spec
       name: build-arm64
