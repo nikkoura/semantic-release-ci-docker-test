@@ -24,9 +24,12 @@ fi
 : ${IMAGE_VERSION:="devel"}
 : ${BUILD_OPTIONS:=""}
 
+echo "Building image ${IMAGE_BASE_NAME}:${IMAGE_VERSION}-${TARGET_ARCH}" 
 docker build --tag ${IMAGE_BASE_NAME}:${IMAGE_VERSION}-${TARGET_ARCH} \
              ${BUILD_OPTIONS} \
              --file ${DOCKERFILE_FOLDER}/${DOCKERFILE} \
              ${DOCKER_BUILD_FOLDER}
+
+echo "Writing image to archive for cross-stage reuse: image-${TARGET_ARCH}.tar"
 docker image save ${IMAGE_BASE_NAME}:${IMAGE_VERSION}-${TARGET_ARCH} \
                   -o image-${TARGET_ARCH}.tar
