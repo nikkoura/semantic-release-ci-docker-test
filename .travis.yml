@@ -18,8 +18,7 @@ jobs:
         os: linux
         language: shell
         script:
-          - cd build
-          - IMAGE_VERSION=${TRAVIS_TAG} ./build-arch.sh
+          - IMAGE_VERSION=${TRAVIS_TAG} build/build-arch.sh
           #TODO: call test script if available
     - <<: *build-spec
       name: build-arm64
@@ -37,8 +36,7 @@ jobs:
       node_js: lts/*
       if: tag IS blank AND branch = master AND type != pull_request AND fork = false
       script:
-        - cd build
-        - ./autotag.sh
+        - build/autotag.sh
 
     - stage: push
       arch: amd64
@@ -52,10 +50,10 @@ jobs:
       script:
         - ls -alR
         - cd build
-        - docker image load -i image-amd64.tar
-        - docker image load -i image-arm64.tar
-        - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=amd64 ./push-arch.sh
-        - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=arm64 ./push-arch.sh
+        - docker image load -i build/image-amd64.tar
+        - docker image load -i build/image-arm64.tar
+        - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=amd64 build/push-arch.sh
+        - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=arm64 build/push-arch.sh
 
     - stage: manifest
       language: shell
@@ -63,5 +61,4 @@ jobs:
       os: linux
       if: tag IS present and fork = false
       script:
-        - cd build
-        - IMAGE_VERSION=${TRAVIS_TAG} ./manifest.sh
+        - IMAGE_VERSION=${TRAVIS_TAG} build/manifest.sh
