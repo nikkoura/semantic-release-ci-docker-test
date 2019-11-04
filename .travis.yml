@@ -13,13 +13,13 @@ jobs:
         create:
           name: docker-image-amd64
           paths:
-            - image-amd64.tar
+            - build/image-amd64.tar
       <<: &build-spec
         os: linux
         language: shell
         script:
-          - IMAGE_VERSION=${TRAVIS_TAG} build/build-arch.sh
-          - mv build/image-*.tar .
+          - cd build
+          - IMAGE_VERSION=${TRAVIS_TAG} ./build-arch.sh
           #TODO: call test script if available
     - <<: *build-spec
       name: build-arm64
@@ -28,7 +28,7 @@ jobs:
         create:
           name: docker-image-arm64
           paths:
-            - image-arm64.tar
+            - build/image-arm64.tar
 
     - stage: auto-tag
       language: node_js
@@ -50,9 +50,10 @@ jobs:
           - docker-image-amd64
           - docker-image-arm64
       script:
+        - ls -alR
+        - cd build
         - docker image load -i image-amd64.tar
         - docker image load -i image-arm64.tar
-        - cd build
         - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=amd64 ./push-arch.sh
         - IMAGE_VERSION=${TRAVIS_TAG} TARGET_ARCH=arm64 ./push-arch.sh
 
