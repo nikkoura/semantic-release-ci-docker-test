@@ -8,4 +8,4 @@ cd "${BASH_SOURCE%/*}/"
 npx semantic-release
 
 # Restore initial dir
-cd ${CALLPATH}
+cd "${CALLPATH}"

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -eo nounset
 
+# Memorize current dir, and change dir to the current script's
+CALLPATH=`pwd`
+cd "${BASH_SOURCE%/*}/"
+
 source semver_parser.sh
 
 #Required env variables
@@ -72,3 +76,6 @@ else
   #latest / devel version
   docker push ${IMAGE_BASE_NAME}:${IMAGE_VERSION}-${TARGET_ARCH}
 fi
+
+#Restore initial dir
+cd "${CALLPATH}"

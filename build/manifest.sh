@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -eo nounset
 
+# Memorize current dir, and change dir to the current script's
+CALLPATH=`pwd`
+cd "${BASH_SOURCE%/*}/"
+
 function buildAndPushManifestList() {
   TARGET_MANIFEST=$1
   echo Creating manifest list: ${TARGET_MANIFEST}
@@ -90,3 +94,6 @@ else
   docker manifest push ${TARGET_MANIFEST}
 
 fi
+
+#Restore initial dir
+cd "${CALLPATH}"
